@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 import static io.jonasg.bob.Strategy.STEP_WISE;
 import static io.jonasg.bob.Strategy.STRICT;
@@ -127,7 +126,7 @@ public class StepBuilderInterfaceTypeSpecFactory {
 				.stream()
 				.filter(field -> (field.isConstructorArgument() && isEnforcedConstructorPolicy())
 						|| field.isMandatory())
-				.collect(Collectors.toList());
+				.toList();
 		mandatoryFields
 				.subList(0, mandatoryFields.size() - 1)
 				.stream()
@@ -141,7 +140,6 @@ public class StepBuilderInterfaceTypeSpecFactory {
 							.returns(ClassName.get("", nextStep.get().name()))
 							.build();
 				})
-				.peek(nextStep::set)
 				.forEach(stepBuilderBuilder::addType);
 
 		// the initial field to be built

@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class TypeDefinitionFactory {
 
@@ -141,12 +140,12 @@ public class TypeDefinitionFactory {
 	private List<MethodDefinition> methods() {
 		return ElementFilter.methodsIn(element.getEnclosedElements()).stream()
 				.map(e -> new MethodDefinition(e.getSimpleName().toString(), parameterTypes(e)))
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private List<TypeMirror> parameterTypes(ExecutableElement element) {
 		return element.getParameters().stream()
 				.map(VariableElement::asType)
-				.collect(Collectors.toList());
+				.toList();
 	}
 }

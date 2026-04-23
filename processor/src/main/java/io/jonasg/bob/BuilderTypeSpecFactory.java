@@ -58,11 +58,11 @@ public class BuilderTypeSpecFactory {
 	private List<BuildableField> extractBuildableFieldsFrom(TypeDefinition typeDefinition) {
 		var fieldNames = typeDefinition.fields().stream()
 				.map(FieldDefinition::name)
-				.collect(Collectors.toList());
+				.toList();
 		List<ParameterDefinition> eligibleConstructorParams = this.constructorDefinition.parameters()
 				.stream()
 				.filter(p -> fieldNames.contains(p.name()))
-				.collect(Collectors.toList());
+				.toList();
 		Stream<BuildableField> constructorBuildableFields = this.constructorDefinition.parameters()
 				.stream()
 				.filter(p -> fieldNames.contains(p.name()))
@@ -81,7 +81,7 @@ public class BuilderTypeSpecFactory {
 							p.type());
 				});
 		return Stream.concat(constructorBuildableFields, setterBuildableFields)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private boolean isOptional(ParameterDefinition p) {
@@ -93,7 +93,7 @@ public class BuilderTypeSpecFactory {
 	private ConstructorDefinition extractConstructorDefinitionFrom(TypeDefinition typeDefinition) {
 		var buildableConstructors = typeDefinition.constructors().stream()
 				.filter(c -> c.isAnnotatedWith(Buildable.Constructor.class))
-				.collect(Collectors.toList());
+				.toList();
 		if (buildableConstructors.size() > 1) {
 			throw new IllegalArgumentException(
 					"Only one constructor can be annotated with @Buildable.Constructor");
@@ -143,14 +143,14 @@ public class BuilderTypeSpecFactory {
 	}
 
 	private List<Strategy> strategy() {
-		return Arrays.stream(this.buildable.strategy()).collect(Collectors.toList());
+		return Arrays.stream(this.buildable.strategy()).toList();
 	}
 
 	private List<MethodSpec> generateSetters() {
 		return this.buildableFields.stream()
 				.filter(this::notExcluded)
 				.map(this::generateSetterForField)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	protected MethodSpec generateSetterForField(BuildableField field) {
@@ -180,7 +180,7 @@ public class BuilderTypeSpecFactory {
 	private List<FieldSpec> generateFields() {
 		return buildableFields.stream()
 				.map(this::generateField)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	protected FieldSpec generateField(BuildableField field) {
