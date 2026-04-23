@@ -156,6 +156,26 @@ public class StrategyTests {
 					.executeTest();
 		}
 
+		@Test
+		void optionalConstructorParamAnnotationIsNotEnforced() {
+			Cute.blackBoxTest()
+					.given()
+					.processors(List.of(BuildableProcessor.class))
+					.andSourceFiles(
+							"/tests/Strategies/Strict/OptionalConstructorParamInStrictStrategy/OptionalConstructorParamInStrictStrategy.java")
+					.whenCompiled()
+					.thenExpectThat()
+					.compilationSucceeds()
+					.andThat()
+					.generatedSourceFile(
+							"io.jonasg.bob.test.OptionalConstructorParamInStrictStrategyBuilder")
+					.matches(
+							CuteApi.ExpectedFileObjectMatcherKind.BINARY,
+							JavaFileObjectUtils.readFromResource(
+									"/tests/Strategies/Strict/OptionalConstructorParamInStrictStrategy/Expected_OptionalConstructorParamInStrictStrategyBuilder.java"))
+					.executeTest();
+		}
+
 		@Nested
 		class AllowNulls {
 
@@ -226,6 +246,24 @@ public class StrategyTests {
 						.processors(List.of(BuildableProcessor.class))
 						.andSourceFiles(
 								"/tests/Strategies/Strict/AllowNulls/FailWhenOptionalAnnotationIsUsedWithAllowNullsStrategy/FailWhenOptionalAnnotationIsUsedWithAllowNullsStrategy.java")
+						.whenCompiled()
+						.thenExpectThat()
+						.compilationFails()
+						.andThat()
+						.compilerMessage()
+						.ofKindError()
+						.contains(
+								"ALLOW_NULLS strategy cannot be combined with optional fields, consider removing the optional annotation or remove the ALLOW_NULLS strategy")
+						.executeTest();
+			}
+
+			@Test
+			void failWhenOptionalParamAnnotationIsUsedWithAllowNullsStrategy() {
+				Cute.blackBoxTest()
+						.given()
+						.processors(List.of(BuildableProcessor.class))
+						.andSourceFiles(
+								"/tests/Strategies/Strict/AllowNulls/FailWhenOptionalParamAnnotationIsUsedWithAllowNullsStrategy/FailWhenOptionalParamAnnotationIsUsedWithAllowNullsStrategy.java")
 						.whenCompiled()
 						.thenExpectThat()
 						.compilationFails()
